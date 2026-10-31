@@ -64,6 +64,10 @@ export default function Home() {
           <View style={{ width: 44, height: 44, borderRadius: 5, backgroundColor: colors.violetSoft, alignItems: 'center', justifyContent: 'center' }}><Ionicons name="heart" size={22} color={colors.dating} /></View>
           <View style={{ flex: 1, marginHorizontal: 12 }}><Text style={type.section}>Find friends your age</Text><Text style={type.secondary}>Swipe photo cards. A heart sends a chat request.</Text></View>
           <Ionicons name="chevron-forward" size={20} color={colors.muted} /></Card></FadeIn>
+        <FadeIn delay={140}><Card onPress={() => r.push('/board')} style={{ flexDirection: 'row', alignItems: 'center', marginTop: 12 }}>
+          <View style={{ width: 44, height: 44, borderRadius: 5, backgroundColor: '#E8F2FF', alignItems: 'center', justifyContent: 'center' }}><Ionicons name="help-buoy" size={22} color="#2B8CE6" /></View>
+          <View style={{ flex: 1, marginHorizontal: 12 }}><Text style={type.section}>Help board</Text><Text style={type.secondary}>Post what you need, or help someone. 2 free posts a month.</Text></View>
+          <Ionicons name="chevron-forward" size={20} color={colors.muted} /></Card></FadeIn>
         <StatsRow items={[{ icon: 'people', value: nb.eligible.length, label: 'Nearby now', onPress: () => r.navigate('/(tabs)/nearby') }, { icon: 'person-add', value: incoming.length, label: 'Requests', onPress: () => r.navigate('/(tabs)/connections') }, { icon: 'people-circle', value: connected, label: 'Connections', onPress: () => r.navigate('/(tabs)/connections') }]} />
         <ProfileStrengthCard done={done} total={checks.length} next={todo?.[0]} />
         <SectionTitle title="People nearby" action="See all" onAction={() => r.navigate('/(tabs)/nearby')} />
