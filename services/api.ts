@@ -46,6 +46,14 @@ export type SyncResult = {
   messages: SyncMsg[]; more: boolean; msgRev: number; notifications: { seq: number; kind: any; icon: string; t: string; to: string; at: number; pushed: boolean }[]; notifSeq: number;
 };
 export type DiscoverPerson = Profile & { likedYou: boolean; distanceKm?: number };
+// Help board
+export type HelpCat = 'help' | 'companion' | 'rent' | 'task' | 'other';
+export type HelpRequestState = 'pending' | 'accepted' | 'declined' | 'closed';
+export type HelpPost = { id: string; category: HelpCat; title: string; body: string; offer: number; pref: string; createdAt: number; poster: { gender?: string; ageBand: string }; myRequest: HelpRequestState | null };
+export type MyHelpPost = { id: string; category: HelpCat; title: string; body: string; offer: number; pref: string; createdAt: number; expiresAt: number; status: 'open' | 'filled' | 'closed'; pending: number; total: number };
+export type HelpQuota = { used: number; limit: number; resetsAt: number };
+export type HelpRequester = { userId: string; note: string; status: HelpRequestState; at: number; profile: Profile };
+export type MyHelpRequest = { post: { id: string; category: HelpCat; title: string; body: string; offer: number; createdAt: number; status: string }; status: HelpRequestState; at: number; poster: Profile | null };
 export type FaceFrame = { uri: string };
 
 export const api = {
@@ -89,6 +97,17 @@ export const api = {
   like: (id: string) => req<{ state: 'sent' | 'connected'; match: boolean }>('POST', `/discover/${id}/like`, {}),
   unpass: (id: string) => req<{ ok: true }>('DELETE', `/discover/${id}/pass`),
   pass: (id: string) => req<{ ok: true }>('POST', `/discover/${id}/pass`, {}),
+  // help board
+  helpFeed: (cat?: string | null) => req<{ posts: HelpPost[] }>('GET', `/help${cat ? `?cat=${cat}` : ''}`),
+  helpCreate: (p: { category: string; title: string; body: string; offer: number; pref: string }) => req<{ post: MyHelpPost; quota: HelpQuota }>('POST', '/help', p),
+  helpMine: () => req<{ posts: MyHelpPost[]; quota: HelpQuota }>('GET', '/help/mine'),
+  helpRequestsFor: (id: string) => req<{ post: Omit<MyHelpPost, 'expiresAt' | 'pending' | 'total'>; requests: HelpRequester[] }>('GET', `/help/mine/${id}/requests`),
+  helpMyRequests: () => req<{ requests: MyHelpRequest[] }>('GET', '/help/requests'),
+  helpRequest: (id: string, note: string) => req<{ state: 'pending' }>('POST', `/help/${id}/request`, { note }),
+  helpAccept: (id: string, userId: string) => req<{ ok: true }>('POST', `/help/${id}/accept`, { userId }),
+  helpDecline: (id: string, userId: string) => req<{ ok: true }>('POST', `/help/${id}/decline`, { userId }),
+  helpDelete: (id: string) => req<{ ok: true }>('DELETE', `/help/${id}`),
+  helpReport: (id: string, reason: string) => req<{ ok: true }>('POST', `/help/${id}/report`, { reason }),
   // social
   sync: (msgRev: number, notifSeq: number) => req<SyncResult>('GET', `/sync?msgRev=${msgRev}&notifSeq=${notifSeq}`),
   connect: (id: string, action: 'request' | 'cancel' | 'accept' | 'decline' | 'remove') => req<{ state: string }>('POST', `/connections/${id}/${action}`, {}),
