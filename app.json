@@ -1,0 +1,81 @@
+{
+  "expo": {
+    "name": "Nearby",
+    "slug": "nearby",
+    "scheme": "nearby",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "backgroundColor": "#F6F5FB",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "backgroundColor": "#6C4DF6",
+      "resizeMode": "contain"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Nearby uses your location to show how far away people around you are.",
+          "locationAlwaysAndWhenInUsePermission": "Nearby can keep finding people around you and alert you when someone is near, even when the app is closed.",
+          "isAndroidBackgroundLocationEnabled": true,
+          "isAndroidForegroundServiceEnabled": true
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Nearby needs access to your photos so you can add them to your profile.",
+          "cameraPermission": "Nearby needs the camera so you can take a profile photo.",
+          "microphonePermission": false
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Nearby uses the camera for the live face scan that verifies you are a real person.",
+          "microphonePermission": false,
+          "recordAudioAndroid": false
+        }
+      ],
+      "expo-asset",
+      "expo-font",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#6C4DF6"
+        }
+      ]
+    ],
+    "ios": {
+      "bundleIdentifier": "com.nearby.app",
+      "supportsTablet": false
+    },
+    "android": {
+      "package": "com.nearby.app",
+      "softwareKeyboardLayoutMode": "resize",
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION",
+        "FOREGROUND_SERVICE",
+        "FOREGROUND_SERVICE_LOCATION",
+        "CAMERA",
+        "POST_NOTIFICATIONS"
+      ],
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#6C4DF6"
+      }
+    },
+    "experiments": {
+      "typedRoutes": false
+    },
+    "icon": "./assets/icon.png",
+    "platforms": [
+      "android"
+    ]
+  }
+}
