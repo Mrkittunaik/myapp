@@ -6,7 +6,7 @@ import { getToken } from './api';
 
 // One live WebSocket to the server. The server only sends a tiny hint ("sync" or "nearby") the moment something changes for this person;
 // the app then fetches the real data over its normal calls. Auto-reconnects, and the old polling stays on as a slow safety net.
-export type Hint = 'sync' | 'nearby';
+export type Hint = 'sync' | 'nearby' | 'help';
 const hints = new Set<(h: Hint) => void>(); const states = new Set<(on: boolean) => void>();
 let ws: WebSocket | null = null; let live = false; let want = false; let tries = 0;
 let retryT: any = null; let dogT: any = null; let unsub: (() => void)[] = [];
@@ -42,8 +42,8 @@ async function open() {
   sock.onopen = () => { watch(); sock.send(JSON.stringify({ t: 'auth', token: tk })); };
   sock.onmessage = (e) => {
     watch(); let m: any; try { m = JSON.parse(String(e.data)); } catch { return; }
-    if (m.t === 'ready') { tries = 0; setLive(true); fire('sync'); fire('nearby'); } // catch up on anything missed while offline
-    else if (m.t === 'sync' || m.t === 'nearby') fire(m.t);
+    if (m.t === 'ready') { tries = 0; setLive(true); fire('sync'); fire('nearby'); fire('help'); } // catch up on anything missed while offline
+    else if (m.t === 'sync' || m.t === 'nearby' || m.t === 'help') fire(m.t);
     else if ((m.t === 'typing' || m.t === 'read') && typeof m.from === 'string') peerSubs.forEach((f) => f(m));
   };
   sock.onclose = (e: any) => { if (ws === sock) { ws = null; setLive(false); } clearTimeout(dogT); if (e?.code !== 4003) schedule(); };
